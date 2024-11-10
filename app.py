@@ -7,8 +7,14 @@ import os
 from dotenv import load_dotenv
 
 app = Flask(__name__)
-CORS(app)  # This line enables CORS for all routes on all origins
+CORS(app)  
 
+# Configurar CORS para permitir solo dominios especificos
+trusted_origins = [
+    "https://frontbibliomuni.onrender.com"
+]
+
+CORS(app,resources={r"/*": {"origins": trusted_origins}})
 
 def get_book_data_by_isbn(isbn):
     url = (
