@@ -14,7 +14,7 @@ trusted_origins = [
     "https://frontbibliomuni.onrender.com"
 ]
 
-CORS(app,resources={r"/*": {"origins": trusted_origins}})
+CORS(app, resources={r"/*": {"origins": trusted_origins}})
 
 def get_book_data_by_isbn(isbn):
     url = (
