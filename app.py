@@ -6,15 +6,14 @@ import socket
 import os
 from dotenv import load_dotenv
 
+# Cargar variables de entorno desde .env
+load_dotenv()
+
 app = Flask(__name__)
-CORS(app)  
 
-# Configurar CORS para permitir solo dominios especificos
-trusted_origins = [
-    "https://frontbibliomuni.onrender.com"
-]
-
-CORS(app, resources={r"/*": {"origins": trusted_origins}})
+# Configurar CORS para permitir solo el dominio específico
+trusted_origin = "https://frontbibliomuni.onrender.com"
+CORS(app, resources={r"/*": {"origins": [trusted_origin]}})
 
 def get_book_data_by_isbn(isbn):
     url = (
@@ -53,7 +52,6 @@ def get_book_data_by_isbn(isbn):
     else:
         return {"error": f"Error fetching data. Status code: {response.status_code}"}
 
-
 @app.route("/api/book", methods=["GET"])
 def get_book():
     isbn = request.args.get("isbn")
@@ -63,10 +61,9 @@ def get_book():
     book_data = get_book_data_by_isbn(isbn)
     return jsonify(book_data)
 
-
 if __name__ == "__main__":
-    _port = os.getenv("PORT")
-    _host = os.getenv("HOST")
+    _port = os.getenv("PORT", 5000)  # Usa 5000 como puerto predeterminado si no está en el .env
+    _host = os.getenv("HOST", "0.0.0.0")  # Usa 0.0.0.0 como host predeterminado
     ip_address = socket.gethostbyname(socket.gethostname())
-    app.run(debug=False, host=_host, port=_port)
-    print(f"Servidor flask corriendo en http://{ip_address}:{_port}")
+    print(f"Servidor Flask corriendo en http://{ip_address}:{_port}")
+    app.run(debug=False, host=_host, port=int(_port))
